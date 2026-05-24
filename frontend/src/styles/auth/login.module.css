@@ -1,0 +1,23 @@
+.section__header {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.section__content {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.card__form {
+    padding: 35px 40px;
+
+    border: none;
+    border-radius: 18px;
+    background: var(--pp-color-neutral-800)
+}

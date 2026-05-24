@@ -50,6 +50,7 @@ ul, li, a {
 }
 
 .content {
+    margin: 0 96px;
     display: flex;
     flex-direction: column;
 
@@ -57,7 +58,6 @@ ul, li, a {
 }
 
 .wrapper {
-    display: flex;
     flex: 1;
     position: relative;
 }

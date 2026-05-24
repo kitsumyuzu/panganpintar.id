@@ -1,11 +1,38 @@
 import style from '@/styles/landing/landing.module.css'
+import logo from '@/assets/market.jpg'
+
+import { Link } from 'react-router-dom'
+import { ArrowRight } from 'lucide-react'
 
 const LandingPage = () => {
     return (
         <>
-            <section className={`${style.section_hero}`}><h1>Section Hero</h1></section>
-            <section className={`${style.section_map}`}><h1>Section Map</h1></section>
-            <section className={`${style.section_prediction}`}><h1>Section Prediction</h1></section>
+            <section className={`${style.section__hero}`}>
+                <div className={`${style.hero__header}`}>
+                    <div className={`${style.wrapper}`}>
+                        <h2>Hero title</h2>
+                        <p>Hero description</p>
+                    </div>
+
+                    <Link to={'#section__prediction'} onClick={(e) => {
+                            e.preventDefault()
+                            document.getElementById('section__prediction')?.scrollIntoView({ behavior: 'smooth' })
+                        }
+                    }>
+                        <button><ArrowRight /> See more</button>
+                    </Link>
+                </div>
+
+                <img src={logo} alt="hero__image" className={`${style.hero__image}`} width={900} />
+            </section>
+
+            <section className={`${style.section__map}`}>
+
+            </section>
+
+            <section className={`${style.section__prediction}`} id={'section__prediction'}>
+                <h1>test</h1>
+            </section>
         </>
     )
 }

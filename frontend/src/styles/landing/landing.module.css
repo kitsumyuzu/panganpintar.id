@@ -1,11 +1,11 @@
-.section_hero {
-
+.section__hero {
+    height: 100vh;
 }
 
-.section_map {
-
+.section__map {
+    height: 100vh;
 }
 
-.section_prediction {
-    
+.section__prediction {
+    height: 100vh;
 }

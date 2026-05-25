@@ -8,7 +8,13 @@ const ResetPasswordPage = () => {
     const [showConfirmedPassword, setShowConfirmedPassword] = useState(false)
     
     return (
-        <div className={'wrapper'}>
+        <div
+            style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 520px',
+                minHeight: '100vh'
+            }}
+        >
             <section className={`${style.section__header}`}>
                 <h4>Header Title</h4>
                 <p>Header Description</p>

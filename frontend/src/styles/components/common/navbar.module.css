@@ -1,0 +1,405 @@
+/* frontend/src/styles/components/common/navbar.module.css */
+
+.container {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+
+    overflow: visible;
+}
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+    height: 80px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 96px;
+
+    /* GLASS EFFECT */
+    background: rgba(2, 6, 23, 0.6);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.nav_logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    user-select: none;
+}
+
+.nav_logo img {
+    width: 42px;
+    height: 42px;
+    object-fit: contain;
+}
+
+.nav_logo span {
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+
+    color: var(--pp-color-primary-700);
+}
+
+/* =========================
+   MENU
+========================= */
+
+.nav_menu {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.nav_list {
+    position: relative;
+}
+
+.nav_item {
+    padding: 10px 14px;
+    border-radius: 10px;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    color: var(--pp-color-neutral-0);
+
+    transition: 0.2s ease;
+}
+
+.nav_item:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: var(--pp-color-primary-700);
+}
+
+/* Active NavLink fix */
+.nav_item:global(.active) {
+    background: rgba(37, 157, 132, 0.15);
+    color: var(--pp-color-primary-700);
+}
+
+/* =========================
+   RIGHT MENU
+========================= */
+
+.nav_menu_right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.nav_icon_wrapper {
+    position: relative;
+}
+
+/* ICON BUTTON */
+.icon_button {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    cursor: pointer;
+
+    border-radius: 12px;
+
+    color: var(--pp-color-neutral-0);
+    background: rgba(255, 255, 255, 0.04);
+
+    transition: 0.2s ease;
+}
+
+.icon_button:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--pp-color-primary-700);
+    transform: translateY(-2px);
+}
+
+/* =========================
+   LOGIN BUTTON
+========================= */
+
+.nav_menu_right button {
+    font-family: inherit;
+}
+
+.nav_menu_right li > a > button {
+    padding: 10px 22px;
+
+    border: none;
+    cursor: pointer;
+
+    border-radius: 12px;
+
+    font-size: 0.95rem;
+    font-weight: 700;
+
+    color: var(--pp-color-neutral-0);
+    background: var(--pp-color-primary-900);
+
+    transition: 0.2s ease;
+}
+
+.nav_menu_right li > a > button:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+/* =========================
+   DROPDOWNS
+========================= */
+
+.notification_dropdown,
+.profile_dropdown {
+    position: absolute;
+    top: 58px;
+    right: 0;
+
+    width: 340px;
+
+    border-radius: 18px;
+
+    background: rgba(15, 23, 42, 0.95);
+    backdrop-filter: blur(16px);
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+
+    animation: dropdownFade 0.2s ease;
+    overflow: hidden;
+}
+
+/* =========================
+   NOTIFICATIONS
+========================= */
+
+.dropdown_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 18px 18px 14px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.dropdown_header h5 {
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.dropdown_header span {
+    font-size: 0.8rem;
+    color: var(--pp-color-neutral-300);
+}
+
+.notification_wrapper {
+    max-height: 360px;
+    overflow-y: auto;
+}
+
+.notification_item {
+    display: flex;
+    gap: 14px;
+
+    padding: 16px 18px;
+
+    transition: 0.2s ease;
+}
+
+.notification_item:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.notification_icon {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    color: var(--pp-color-primary-700);
+    background: rgba(37, 157, 132, 0.12);
+}
+
+.notification_content {
+    width: 100%;
+}
+
+.notification_top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.notification_top h5 {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.notification_content p {
+    font-size: 0.85rem;
+    color: var(--pp-color-neutral-200);
+    margin-bottom: 6px;
+}
+
+.notification_content span {
+    font-size: 0.75rem;
+    color: var(--pp-color-neutral-400);
+}
+
+.delete_notification {
+    width: 28px;
+    height: 28px;
+
+    border: none;
+    cursor: pointer;
+
+    border-radius: 8px;
+
+    background: transparent;
+    color: var(--pp-color-neutral-300);
+
+    transition: 0.2s ease;
+}
+
+.delete_notification:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: #ff5d5d;
+}
+
+.empty_notification {
+    padding: 28px 18px;
+    text-align: center;
+    color: var(--pp-color-neutral-400);
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile_dropdown {
+    width: 240px;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.dropdown_link,
+.btn {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 12px 14px;
+
+    border-radius: 12px;
+
+    font-size: 0.92rem;
+    font-weight: 700;
+
+    color: var(--pp-color-neutral-0);
+    background: transparent;
+
+    border: none;
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.dropdown_link:hover,
+.btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.btn_logout {
+    color: #ff7b7b;
+}
+
+.btn_logout:hover {
+    background: rgba(255, 0, 0, 0.08);
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media (max-width: 1024px) {
+    .navbar {
+        padding: 0 40px;
+    }
+
+    .nav_menu {
+        gap: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 0 20px;
+    }
+
+    .nav_menu {
+        display: none;
+    }
+
+    .nav_menu_right {
+        gap: 10px;
+    }
+
+    .notification_dropdown,
+    .profile_dropdown {
+        right: 0;
+        width: 280px;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        padding: 0 14px;
+        height: 70px;
+    }
+
+    .nav_logo span {
+        font-size: 1rem;
+    }
+}

@@ -2,8 +2,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 import MainLayout from '@/layouts/MainLayout'
 import LandingPage from '@/pages/landing/index'
-import AffiliatePage from '@/pages/landing/affiliate'
-import SmartBudgetPage from '@/pages/landing/smartbudget'
+import AffiliatePage from '@/pages/landing/affiliate/index'
+import SmartBudgetPage from '@/pages/landing/smartBudgeting/index'
+import SmartBudgetSession from '@/pages/landing/smartBudgeting/smartbudgeting'
 import AboutPage from '@/pages/landing/about'
 
 import AuthLayout from '@/layouts/AuthLayout'
@@ -23,6 +24,7 @@ export default function Router() {
                     <Route index path={'/'} element={<LandingPage />} />
                     <Route path={'/affiliate'} element={<AffiliatePage />} />
                     <Route path={'/smart-budget'} element={<SmartBudgetPage />} />
+                    <Route path={'/smart-budget/session'} element={<SmartBudgetSession />} />
                     <Route path={'/about'} element={<AboutPage />} />
                 </Route>
 

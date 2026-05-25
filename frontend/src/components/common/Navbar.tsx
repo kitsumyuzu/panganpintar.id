@@ -48,7 +48,7 @@ export default function Navbar() {
             <nav className={`${style.navbar}`}>
                 <div className={`${style.nav_logo}`}>
                     <img src={logo} alt={'navbar logo'} />
-                    <span>Header Title</span>
+                    <span>PANGAN PINTAR</span>
                 </div>
                 <ul className={`${style.nav_menu}`}>
                     <li className={`${style.nav_list}`}><NavLink to={'/'} className={`${style.nav_item}`}>Home</NavLink></li>

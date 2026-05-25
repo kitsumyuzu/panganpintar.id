@@ -1,13 +1,15 @@
 import style from '@/styles/components/common/navbar.module.css'
 
-import { NavLink, Link } from 'react-router-dom'
+import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import { Bell, CircleUserIcon, LogOut, StickyNote, X, User, Settings } from 'lucide-react'
 
 import logo from '@/assets/Crystal.png'
 
 export default function Navbar() {
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const token = localStorage.getItem('token')
+    const isLoggedIn = !!token
+    const navigate = useNavigate()
     const [showNotif, setShowNotif] = useState(false)
     const [showProfile, setShowProfile] = useState(false)
 
@@ -36,6 +38,11 @@ export default function Navbar() {
         setNotifications((prev) => prev.filter((notify) => notify.id !== id));
     }
 
+    const handleLogout = () => {
+        localStorage.removeItem('token')
+        navigate('/login')
+    }
+
     return (
         <header className={`${style.container}`}>
             <nav className={`${style.navbar}`}>
@@ -50,13 +57,18 @@ export default function Navbar() {
                     <li className={`${style.nav_list}`}><NavLink to={'/about'} className={`${style.nav_item}`}>About</NavLink></li>
                 </ul>
                 <ul className={`${style.nav_menu_right}`}>
-                    { isLoggedIn ? (
+                    {isLoggedIn ? (
                         <>
                             <li className={`${style.nav_icon_wrapper}`} ref={notifRef}>
-                                <button className={`${style.icon_button}`} onClick={() => {
-                                    setShowNotif(!showNotif)
-                                    setShowProfile(false)
-                                }}><Bell size={24} /></button>
+                                <button
+                                    className={`${style.icon_button}`}
+                                    onClick={() => {
+                                        setShowNotif(!showNotif)
+                                        setShowProfile(false)
+                                    }}
+                                >
+                                    <Bell size={24} />
+                                </button>
 
                                 {showNotif && (
                                     <div className={`${style.notification_dropdown}`}>
@@ -68,12 +80,26 @@ export default function Navbar() {
                                         <div className={`${style.notification_wrapper}`}>
                                             {notifications.length > 0 ? (
                                                 notifications.map((notify) => (
-                                                    <div key={notify.id} className={`${style.notification_item}`}>
-                                                        <div className={`${style.notification_icon}`}>{notify.icon}</div>
+                                                    <div
+                                                        key={notify.id}
+                                                        className={`${style.notification_item}`}
+                                                    >
+                                                        <div className={`${style.notification_icon}`}>
+                                                            {notify.icon}
+                                                        </div>
+
                                                         <div className={`${style.notification_content}`}>
                                                             <div className={`${style.notification_top}`}>
                                                                 <h5>{notify.title}</h5>
-                                                                <button className={`${style.delete_notification}`} onClick={() => removeNotifications(notify.id)}><X size={18} /></button>
+
+                                                                <button
+                                                                    className={`${style.delete_notification}`}
+                                                                    onClick={() =>
+                                                                        removeNotifications(notify.id)
+                                                                    }
+                                                                >
+                                                                    <X size={18} />
+                                                                </button>
                                                             </div>
 
                                                             <p>{notify.description}</p>
@@ -82,7 +108,9 @@ export default function Navbar() {
                                                     </div>
                                                 ))
                                             ) : (
-                                                <div className={`${style.empty_notification}`}>Tidak ada notifikasi</div>
+                                                <div className={`${style.empty_notification}`}>
+                                                    Tidak ada notifikasi
+                                                </div>
                                             )}
                                         </div>
                                     </div>
@@ -90,16 +118,41 @@ export default function Navbar() {
                             </li>
 
                             <li className={`${style.nav_icon_wrapper}`} ref={profileRef}>
-                                <button className={`${style.icon_button}`} onClick={() => {
-                                    setShowProfile(!showProfile)
-                                    setShowNotif(false)
-                                }}><CircleUserIcon size={24} /></button>
+                                <button
+                                    className={`${style.icon_button}`}
+                                    onClick={() => {
+                                        setShowProfile(!showProfile)
+                                        setShowNotif(false)
+                                    }}
+                                >
+                                    <CircleUserIcon size={24} />
+                                </button>
 
                                 {showProfile && (
                                     <div className={`${style.profile_dropdown}`}>
-                                        <Link to={'/profile'} className={style.dropdown_link}><User size={18} />Profile</Link>
-                                        <Link to={'/pengaturan'} className={style.dropdown_link}><Settings size={18} />Pengaturan</Link>
-                                        <Link to={'/logout'} className={style.dropdown_link}><button className={`${style.btn} ${style.btn_logout}`}><LogOut size={18} />Logout</button></Link>
+                                        <Link
+                                            to={'/profile'}
+                                            className={style.dropdown_link}
+                                        >
+                                            <User size={18} />
+                                            Profile
+                                        </Link>
+
+                                        <Link
+                                            to={'/pengaturan'}
+                                            className={style.dropdown_link}
+                                        >
+                                            <Settings size={18} />
+                                            Pengaturan
+                                        </Link>
+
+                                        <button
+                                            className={`${style.btn} ${style.btn_logout}`}
+                                            onClick={handleLogout}
+                                        >
+                                            <LogOut size={18} />
+                                            Logout
+                                        </button>
                                     </div>
                                 )}
                             </li>
@@ -107,7 +160,7 @@ export default function Navbar() {
                     ) : (
                         <li>
                             <Link to={'/login'}>
-                                <button onClick={() => setIsLoggedIn(true)}>Login</button>
+                                <button>Login</button>
                             </Link>
                         </li>
                     )}

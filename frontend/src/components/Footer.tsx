@@ -1,4 +1,5 @@
 import { Mail, Phone, MapPin } from 'lucide-react'
+import logoImg from "../brandIcon.png"; // Imported logo file
 
 // Custom Social Icon Components with size prop
 const FacebookIcon = ({ size = 24, ...props }: React.SVGProps<SVGSVGElement> & { size?: number }) => (
@@ -61,13 +62,13 @@ export default function Footer() {
 
                         {/* Brand Title & Description */}
                         <div className="lg:col-span-2 space-y-6">
-                            <div className="flex items-center space-x-3">
-                                <div className="w-10 h-10 bg-emerald-600 dark:bg-emerald-500 rounded-xl flex items-center justify-center shadow-lg shadow-emerald-900/20">
-                                    <span className="text-white font-extrabold text-xl">P</span>
-                                </div>
-                                <span className="text-xl font-extrabold text-white tracking-tight">
-                                    Pangan<span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">Pintar</span>
-                                </span>
+                            <div className="flex items-center">
+                                {/* Refactored to match logo layout preferences exactly */}
+                                <img 
+                                    src={logoImg} 
+                                    alt="Pangan Pintar Logo" 
+                                    className="h-8 w-auto object-contain transition-transform duration-200"
+                                />
                             </div>
                             <p className="text-slate-400 max-w-sm text-sm leading-relaxed">
                                 Platform pintar untuk manajemen pangan dan anggaran bisnis Anda.

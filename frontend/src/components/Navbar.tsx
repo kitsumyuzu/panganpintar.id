@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, X, Sun, Moon, LogIn, User, LogOut, Store, Edit2 } from "lucide-react";
 import clsx from "clsx";
+import logoImg from "../brandIcon.png";
 
 interface NavbarProps {
     onToggleDarkMode?: () => void;
@@ -34,7 +35,6 @@ export default function Navbar({ onToggleDarkMode, isDark }: NavbarProps) {
     const [affiliateStore, setAffiliateStore] = useState<AffiliateStore | null>(null);
     const location = useLocation();
 
-    // Initialize dark mode on mount
     useEffect(() => {
         setMounted(true);
         if (typeof isDark === "undefined") {
@@ -197,15 +197,13 @@ export default function Navbar({ onToggleDarkMode, isDark }: NavbarProps) {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between">
                     {/* Logo */}
-                    <div className="flex-shrink-0">
-                        <Link to="/" className="flex items-center space-x-3 group">
-                            <div className="w-10 h-10 bg-emerald-600 dark:bg-emerald-500 rounded-xl flex items-center justify-center shadow-md shadow-emerald-600/10 group-hover:scale-102 transition-transform duration-200">
-                                <span className="text-white font-extrabold text-xl">P</span>
-                            </div>
-                            <span className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight hidden sm:block">
-                                Pangan
-                                <span className="bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-400 bg-clip-text text-transparent">Pintar</span>
-                            </span>
+                    <div className="flex-shrink-0 flex items-center h-full">
+                        <Link to="/" className="flex items-center group block">
+                            <img 
+                                src={logoImg} 
+                                alt="Pangan Pintar Logo" 
+                                className="h-10 w-auto max-h-[80px] object-contain group-hover:scale-105 transition-transform duration-200"
+                            />
                         </Link>
                     </div>
 

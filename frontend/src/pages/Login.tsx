@@ -3,163 +3,163 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react'
 
 export default function Login() {
-  const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+    const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setError('')
+        setLoading(true)
 
-    try {
-      const response = await fetch('http://localhost:3001/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      })
+        try {
+            const response = await fetch('http://localhost:3001/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password })
+            })
 
-      const data = await response.json()
+            const data = await response.json()
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Login failed')
-      }
+            if (!response.ok) {
+                throw new Error(data.error || 'Login failed')
+            }
 
-      // Save token and user
-      localStorage.setItem('token', data.data.token)
-      localStorage.setItem('user', JSON.stringify(data.data.user))
+            // Save token and user
+            localStorage.setItem('token', data.data.token)
+            localStorage.setItem('user', JSON.stringify(data.data.user))
 
-      // Dispatch custom event for navbar update
-      window.dispatchEvent(new Event('user-logged-in'))
+            // Dispatch custom event for navbar update
+            window.dispatchEvent(new Event('user-logged-in'))
 
-      // Handle redirect if exists
-      const redirect = searchParams.get('redirect')
-      if (redirect) {
-        navigate(redirect)
-      } else {
-        navigate('/')
-      }
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Login failed'
-      setError(errorMessage)
-    } finally {
-      setLoading(false)
+            // Handle redirect if exists
+            const redirect = searchParams.get('redirect')
+            if (redirect) {
+                navigate(redirect)
+            } else {
+                navigate('/')
+            }
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : 'Login failed'
+            setError(errorMessage)
+        } finally {
+            setLoading(false)
+        }
     }
-  }
 
-  return (
-    <div className="min-h-screen bg-[#e4e4e4] dark:bg-[#020617] flex items-center justify-center px-4 py-24">
-      <div className="w-full max-w-md md:max-w-lg lg:max-w-xl">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center space-x-2">
-            <div className="w-12 h-12 bg-[#259d84] rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-2xl">P</span>
+    return (
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center px-4 py-24 selection:bg-emerald-500/20 selection:text-emerald-600">
+            <div className="w-full max-w-md">
+                {/* Logo */}
+                <div className="text-center mb-8">
+                    <Link to="/" className="inline-flex items-center space-x-2 group">
+                        <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-md shadow-emerald-500/10 group-hover:scale-105 transition-transform duration-200">
+                            <span className="text-white font-black text-2xl tracking-tighter">P</span>
+                        </div>
+                    </Link>
+                </div>
+
+                {/* Form Card */}
+                <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/60 dark:border-slate-800/60 shadow-sm shadow-slate-100/40 dark:shadow-none">
+                    <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">
+                        Welcome Back
+                    </h1>
+                    <p className="text-slate-500 dark:text-slate-400 mb-6 text-sm font-medium">
+                        Silakan masuk untuk melanjutkan
+                    </p>
+
+                    {/* Error Message */}
+                    {error && (
+                        <div className="mb-5 p-4 bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 rounded-xl text-sm font-medium animate-fade-in">
+                            {error}
+                        </div>
+                    )}
+
+                    {/* Form */}
+                    <form onSubmit={handleSubmit} className="space-y-5">
+                        {/* Email */}
+                        <div>
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                                Email
+                            </label>
+                            <div className="relative">
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={18} />
+                                <input
+                                    type="email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    placeholder="email@example.com"
+                                    required
+                                    className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 dark:focus:border-emerald-500 transition-all"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Password */}
+                        <div>
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                                Password
+                            </label>
+                            <div className="relative">
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={18} />
+                                <input
+                                    type={showPassword ? 'text' : 'password'}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="••••••••"
+                                    required
+                                    className="w-full pl-12 pr-12 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 dark:focus:border-emerald-500 transition-all"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Forgot Password */}
+                        <div className="text-right">
+                            <Link
+                                to="/forgot-password"
+                                className="text-sm text-emerald-600 dark:text-emerald-400 font-semibold hover:text-emerald-700 dark:hover:text-emerald-300 transition-colors"
+                            >
+                                Lupa password?
+                            </Link>
+                        </div>
+
+                        {/* Submit Button */}
+                        <button
+                            type="submit"
+                            disabled={loading}
+                            className="w-full flex items-center justify-center px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 text-white font-bold rounded-xl shadow-md shadow-emerald-500/5 transition-all duration-200 transform active:scale-[0.98]"
+                        >
+                            {loading ? (
+                                <span className="animate-pulse">Memuat...</span>
+                            ) : (
+                                <>
+                                    Masuk
+                                    <ArrowRight size={18} className="ml-2" />
+                                </>
+                            )}
+                        </button>
+                    </form>
+
+                    {/* Register Link */}
+                    <p className="text-center mt-6 text-sm text-slate-500 dark:text-slate-400 font-medium">
+                        Belum punya akun?{' '}
+                        <Link to="/register" className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-bold">
+                            Daftar sekarang
+                        </Link>
+                    </p>
+                </div>
             </div>
-          </Link>
         </div>
-
-        {/* Form Card */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
-            Welcome Back
-          </h1>
-          <p className="text-gray-500 dark:text-gray-400 mb-6">
-            Silakan masuk untuk melanjutkan
-          </p>
-
-          {/* Error Message */}
-          {error && (
-            <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-lg text-sm">
-              {error}
-            </div>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Email
-              </label>
-              <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="email@example.com"
-                  required
-                  className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#259d84]"
-                />
-              </div>
-            </div>
-
-            {/* Password */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="••••••••"
-                  required
-                  className="w-full pl-12 pr-12 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#259d84]"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-              </div>
-            </div>
-
-            {/* Forgot Password */}
-            <div className="text-right">
-              <Link
-                to="/forgot-password"
-                className="text-sm text-[#259d84] hover:underline"
-              >
-                Lupa password?
-              </Link>
-            </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full flex items-center justify-center px-8 py-3 bg-[#259d84] hover:bg-[#1f7a68] disabled:bg-gray-300 text-white font-semibold rounded-xl transition-colors"
-            >
-              {loading ? (
-                <span className="animate-pulse">Memuat...</span>
-              ) : (
-                <>
-                  Masuk
-                  <ArrowRight size={20} className="ml-2" />
-                </>
-              )}
-            </button>
-          </form>
-
-          {/* Register Link */}
-          <p className="text-center mt-6 text-gray-500 dark:text-gray-400">
-            Belum punya akun?{' '}
-            <Link to="/register" className="text-[#259d84] hover:underline font-medium">
-              Daftar sekarang
-            </Link>
-          </p>
-        </div>
-      </div>
-    </div>
-  )
+    )
 }

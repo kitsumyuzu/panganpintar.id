@@ -120,8 +120,8 @@ export default function Register() {
         }
     }, [])
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value, type } = e.target
+    const handleChange = (e: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value, type } = e.target as any
         const checked = (e.target as HTMLInputElement).checked
         
         if (type === 'checkbox') {
@@ -161,7 +161,7 @@ export default function Register() {
             return
         }
 
-        setLoading(true)
+        loading(true)
 
         try {
             const response = await fetch('http://localhost:3001/api/auth/register', {
@@ -209,46 +209,46 @@ export default function Register() {
     const passwordStrength = getPasswordStrength()
 
     return (
-        <div className="min-h-screen bg-[#e4e4e4] dark:bg-[#020617] flex items-center justify-center px-4 py-24">
-            <div className="w-full max-w-md md:max-w-lg lg:max-w-xl">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex items-center justify-center px-4 py-24 selection:bg-emerald-500/20 selection:text-emerald-600">
+            <div className="w-full max-w-md md:max-w-lg">
                 {/* Logo */}
                 <div className="text-center mb-8">
-                    <Link to="/" className="inline-flex items-center space-x-2">
-                        <div className="w-12 h-12 bg-[#259d84] rounded-xl flex items-center justify-center">
-                            <span className="text-white font-bold text-2xl">P</span>
+                    <Link to="/" className="inline-flex items-center space-x-2 group">
+                        <div className="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-md shadow-emerald-500/10 group-hover:scale-105 transition-transform duration-200">
+                            <span className="text-white font-black text-2xl tracking-tighter">P</span>
                         </div>
                     </Link>
                 </div>
 
                 {/* Form Card */}
-                <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 border border-gray-200 dark:border-gray-700">
-                    <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 border border-slate-200/60 dark:border-slate-800/60 shadow-sm shadow-slate-100/40 dark:shadow-none">
+                    <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white mb-2 tracking-tight">
                         Buat Akun
                     </h1>
-                    <p className="text-gray-500 dark:text-gray-400 mb-6">
+                    <p className="text-slate-500 dark:text-slate-400 mb-6 text-sm font-medium">
                         Daftar untuk memulai
                     </p>
 
                     {error && (
-                        <div className="mb-4 p-3 bg-red-100 dark:bg-red-900/30 text-red-600 rounded-lg text-sm">
+                        <div className="mb-5 p-4 bg-red-50 dark:bg-red-950/30 border border-red-100 dark:border-red-900/30 text-red-600 dark:text-red-400 rounded-xl text-sm font-medium animate-fade-in">
                             {error}
                         </div>
                     )}
                     {success && (
-                        <div className="mb-4 p-3 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-lg text-sm flex items-center">
-                            <CheckCircle size={18} className="mr-2" />
+                        <div className="mb-5 p-4 bg-green-50 dark:bg-green-950/30 border border-green-100 dark:border-green-900/30 text-green-600 dark:text-green-400 rounded-xl text-sm font-medium flex items-center">
+                            <CheckCircle size={18} className="mr-2 shrink-0 text-green-600 dark:text-green-400" />
                             {success}
                         </div>
                     )}
 
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                    <form onSubmit={handleSubmit} className="space-y-5">
                         {/* Nama Lengkap */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                                 Nama Lengkap *
                             </label>
                             <div className="relative">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={18} />
                                 <input
                                     type="text"
                                     name="namaLengkap"
@@ -256,25 +256,25 @@ export default function Register() {
                                     onChange={handleChange}
                                     placeholder="John Doe"
                                     required
-                                    className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#259d84]"
+                                    className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
                                 />
                             </div>
                         </div>
 
                         {/* Tanggal Lahir */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                                 Tanggal Lahir *
                             </label>
                             <div className="grid grid-cols-3 gap-2">
                                 <div className="relative">
-                                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                                    <Calendar className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={16} />
                                     <select
                                         name="tanggal"
                                         value={formData.tanggal}
                                         onChange={handleChange}
                                         required
-                                        className="w-full pl-9 pr-2 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#259d84] text-sm"
+                                        className="w-full pl-9 pr-2 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 text-sm appearance-none"
                                     >
                                         <option value="">Tgl</option>
                                         {DAYS.map(day => (
@@ -288,7 +288,7 @@ export default function Register() {
                                         value={formData.bulan}
                                         onChange={handleChange}
                                         required
-                                        className="w-full px-3 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#259d84] text-sm"
+                                        className="w-full px-3 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 text-sm appearance-none"
                                     >
                                         <option value="">Bulan</option>
                                         {MONTHS.map(month => (
@@ -302,7 +302,7 @@ export default function Register() {
                                         value={formData.tahun}
                                         onChange={handleChange}
                                         required
-                                        className="w-full px-3 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#259d84] text-sm"
+                                        className="w-full px-3 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 text-sm appearance-none"
                                     >
                                         <option value="">Thn</option>
                                         {YEARS.map(year => (
@@ -315,20 +315,20 @@ export default function Register() {
 
                         {/* Provinsi */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Provincia Asal *
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
+                                Provinsi Asal *
                             </label>
                             <div className="relative">
-                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={18} />
                                 <select
                                     name="province"
                                     value={formData.province}
                                     onChange={handleChange}
                                     required
                                     disabled={loadingProvinces}
-                                    className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#259d84]"
+                                    className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 appearance-none disabled:opacity-60"
                                 >
-                                    <option value="">{loadingProvinces ? 'Memuat...' : 'Pilih Provinces'}</option>
+                                    <option value="">{loadingProvinces ? 'Memuat...' : 'Pilih Provinsi'}</option>
                                     {provinces.map(province => (
                                         <option key={province} value={province}>{province}</option>
                                     ))}
@@ -338,11 +338,11 @@ export default function Register() {
 
                         {/* Phone */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                                 Nomor Handphone *
                             </label>
                             <div className="relative">
-                                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={18} />
                                 <input
                                     type="tel"
                                     name="phone"
@@ -350,18 +350,18 @@ export default function Register() {
                                     onChange={handleChange}
                                     placeholder="+6281234567890"
                                     required
-                                    className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#259d84]"
+                                    className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
                                 />
                             </div>
                         </div>
 
                         {/* Email */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                                 Email *
                             </label>
                             <div className="relative">
-                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={18} />
                                 <input
                                     type="email"
                                     name="email"
@@ -369,36 +369,36 @@ export default function Register() {
                                     onChange={handleChange}
                                     placeholder="email@example.com"
                                     required
-                                    className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#259d84]"
+                                    className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
                                 />
                             </div>
                         </div>
 
                         {/* Username */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                                 Username
                             </label>
                             <div className="relative">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={18} />
                                 <input
                                     type="text"
                                     name="username"
                                     value={formData.username}
                                     onChange={handleChange}
                                     placeholder="johndoe"
-                                    className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#259d84]"
+                                    className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
                                 />
                             </div>
                         </div>
 
                         {/* Password */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                                 Password *
                             </label>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={18} />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     name="password"
@@ -406,34 +406,34 @@ export default function Register() {
                                     onChange={handleChange}
                                     placeholder="••••••••"
                                     required
-                                    className="w-full pl-12 pr-12 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#259d84]"
+                                    className="w-full pl-12 pr-12 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors"
                                 >
-                                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
                             </div>
                             
                             {formData.password && (
-                                <div className="mt-2">
+                                <div className="mt-2.5 animate-fade-in">
                                     <div className="flex space-x-1">
                                         {[1, 2, 3, 4].map(i => (
                                             <div
                                                 key={i}
-                                                className={`h-1 flex-1 rounded ${
+                                                className={`h-1 flex-1 rounded-full transition-colors duration-300 ${
                                                     i <= passwordStrength.strength
-                                                        ? i <= 1 ? 'bg-red-500' : i <= 2 ? 'bg-yellow-500' : 'bg-green-500'
-                                                        : 'bg-gray-200 dark:bg-gray-700'
+                                                        ? i <= 1 ? 'bg-red-500' : i <= 2 ? 'bg-amber-500' : 'bg-emerald-500'
+                                                        : 'bg-slate-200 dark:bg-slate-800'
                                                 }`}
                                             />
                                         ))}
                                     </div>
-                                    <p className={`text-xs mt-1 ${
+                                    <p className={`text-xs mt-1.5 font-semibold ${
                                         passwordStrength.strength <= 1 ? 'text-red-500' :
-                                        passwordStrength.strength <= 2 ? 'text-yellow-500' : 'text-green-500'
+                                        passwordStrength.strength <= 2 ? 'text-amber-500' : 'text-emerald-500'
                                     }`}>
                                         {passwordStrength.text}
                                     </p>
@@ -443,11 +443,11 @@ export default function Register() {
 
                         {/* Confirm Password */}
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            <label className="block text-sm font-semibold text-slate-700 dark:text-slate-300 mb-2">
                                 Konfirmasi Password *
                             </label>
                             <div className="relative">
-                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={20} />
+                                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" size={18} />
                                 <input
                                     type={showPassword ? 'text' : 'password'}
                                     name="confirmPassword"
@@ -455,29 +455,29 @@ export default function Register() {
                                     onChange={handleChange}
                                     placeholder="••••••••"
                                     required
-                                    className="w-full pl-12 pr-4 py-3 bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#259d84]"
+                                    className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 font-medium focus:outline-none focus:ring-4 focus:ring-emerald-500/10 focus:border-emerald-500 transition-all"
                                 />
                             </div>
                         </div>
 
                         {/* Google reCAPTCHA */}
                         <div className="flex justify-center py-2">
-                            <div id="recaptcha-container"></div>
+                            <div id="recaptcha-container" className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800"></div>
                         </div>
 
                         {/* Agree Terms */}
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-2.5 py-1">
                             <input
                                 type="checkbox"
                                 name="agreeTerms"
                                 id="agreeTerms"
                                 checked={formData.agreeTerms}
                                 onChange={handleChange}
-                                className="w-4 h-4 text-[#259d84] bg-gray-50 dark:bg-gray-900 border-gray-200 dark:border-gray-700 rounded focus:ring-[#259d84]"
+                                className="w-4 h-4 text-emerald-600 bg-slate-50 dark:bg-slate-950 border-slate-300 dark:border-slate-800 rounded focus:ring-emerald-500/20 focus:ring-offset-0 dark:checked:bg-emerald-500 dark:checked:border-emerald-500 transition-colors"
                             />
-                            <label htmlFor="agreeTerms" className="text-sm text-gray-600 dark:text-gray-400">
+                            <label htmlFor="agreeTerms" className="text-sm text-slate-600 dark:text-slate-400 font-medium select-none">
                                 Saya menyetujui{' '}
-                                <Link to="/terms" className="text-[#259d84] hover:underline">
+                                <Link to="/terms" className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-semibold transition-colors">
                                     Syarat dan Ketentuan
                                 </Link>
                             </label>
@@ -487,23 +487,23 @@ export default function Register() {
                         <button
                             type="submit"
                             disabled={loading || !captchaToken}
-                            className="w-full flex items-center justify-center px-8 py-3 bg-[#259d84] hover:bg-[#1f7a68] disabled:bg-gray-300 text-white font-semibold rounded-xl transition-colors"
+                            className="w-full flex items-center justify-center px-8 py-3.5 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-500 dark:hover:bg-emerald-600 disabled:bg-slate-200 dark:disabled:bg-slate-800 disabled:text-slate-400 text-white font-bold rounded-xl shadow-md shadow-emerald-500/5 transition-all duration-200 transform active:scale-[0.98]"
                         >
                             {loading ? (
                                 <span className="animate-pulse">Memuat...</span>
                             ) : (
                                 <>
                                     Daftar
-                                    <ArrowRight size={20} className="ml-2" />
+                                    <ArrowRight size={18} className="ml-2" />
                                 </>
                             )}
                         </button>
                     </form>
 
                     {/* Login Link */}
-                    <p className="text-center mt-6 text-gray-500 dark:text-gray-400">
+                    <p className="text-center mt-6 text-sm text-slate-500 dark:text-slate-400 font-medium">
                         Sudah punya akun?{' '}
-                        <Link to="/login" className="text-[#259d84] hover:underline font-medium">
+                        <Link to="/login" className="text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 dark:hover:text-emerald-300 font-bold">
                             Masuk
                         </Link>
                     </p>

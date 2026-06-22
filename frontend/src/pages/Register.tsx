@@ -5,7 +5,7 @@ import { User, Mail, Lock, Phone, Eye, EyeOff, ArrowRight, CheckCircle, MapPin, 
 declare global {
     interface Window {
         grecaptcha?: {
-            render: (container: string | HTMLElement, config: any) => string
+            render: (container: string | HTMLElement, config: Record<string, unknown>) => string
             execute: (widgetId: string) => void
             reset: (widgetId: string) => void
             getResponse: (widgetId: string) => string
@@ -115,19 +115,22 @@ export default function Register() {
             if (recaptchaRef.current && window.grecaptcha) {
                 try {
                     window.grecaptcha.reset(recaptchaRef.current)
-                } catch (e) { /* ignore */ }
+                } catch {
+                    // ...
+                }
             }
         }
     }, [])
 
-    const handleChange = (e: React.ChangeEventHandler<HTMLInputElement | HTMLSelectElement>) => {
-        const { name, value, type } = e.target as any
-        const checked = (e.target as HTMLInputElement).checked
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, type } = e.target
         
         if (type === 'checkbox') {
-            setFormData({ ...formData, [name]: checked })
+            const checked = (e.target as HTMLInputElement).checked
+            setFormData(prev => ({ ...prev, [name]: checked }))
         } else {
-            setFormData({ ...formData, [name]: value })
+            const value = e.target.value
+            setFormData(prev => ({ ...prev, [name]: value }))
         }
     }
 
@@ -161,7 +164,7 @@ export default function Register() {
             return
         }
 
-        loading(true)
+        setLoading(true)
 
         try {
             const response = await fetch('http://localhost:3001/api/auth/register', {
@@ -189,8 +192,12 @@ export default function Register() {
             setTimeout(() => {
                 navigate('/login')
             }, 3000)
-        } catch (err: any) {
-            setError(err.message)
+        } catch (err: unknown) {
+            if (err instanceof Error) {
+                setError(err.message)
+            } else {
+                setError('Terjadi kesalahan yang tidak diketahui')
+            }
         } finally {
             setLoading(false)
         }

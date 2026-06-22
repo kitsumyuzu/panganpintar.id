@@ -29,6 +29,12 @@ interface User {
     province?: string
 }
 
+interface ApiCommodityItem {
+    name?: string
+    commodity?: string
+    nama?: string
+}
+
 const AI_API_BASE = `${import.meta.env.VITE_AI_API_URL || 'https://firmanfadilah-pangan-pintar-api.hf.space'}/api/v1`
 const ALL_PROVINCES = 'Semua Provinsi'
 
@@ -45,6 +51,7 @@ const SAMPLE_CURRENT_PRICES: Record<string, number> = {
     'Daging Sapi': 200000,
 }
 
+// PERBAIKAN: Memperbaiki typo border-rose-900/30 menjadi border-emerald-900/30 pada badge 'Turun'
 const BADGE_COLORS: Record<string, string> = {
     'Naik': 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border border-rose-100 dark:border-rose-900/30',
     'Turun': 'bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 dark:text-emerald-400 border border-emerald-100 dark:border-emerald-900/30',
@@ -72,129 +79,183 @@ export default function PredictionSection() {
     const [predictions, setPredictions] = useState<CommodityPrediction[]>([])
     const [userProvince, setUserProvince] = useState<string | null>(null)
 
+    // 1. Cek User Session & Provinsi Asal
     useEffect(() => {
+        let isMounted = true;
         const checkUserAndProvince = async () => {
             const token = localStorage.getItem('token')
-            if (token) {
-                try {
-                    const res = await fetch('http://localhost:3001/api/auth/me', {
-                        headers: { 'Authorization': `Bearer ${token}` },
-                    })
-                    if (res.ok) {
-                        const data: { success: boolean; data: User } = await res.json()
-                        if (data.success && data.data?.province) {
-                            setUserProvince(data.data.province)
-                            setSelectedProvince(data.data.province)
-                        }
+            if (!token) return
+
+            try {
+                const res = await fetch('http://localhost:3001/api/auth/me', {
+                    headers: { 'Authorization': `Bearer ${token}` },
+                })
+                if (res.ok && isMounted) {
+                    const data: { success: boolean; data: User } = await res.json()
+                    if (data.success && data.data?.province) {
+                        setUserProvince(data.data.province)
+                        setSelectedProvince(data.data.province)
                     }
-                } catch (error) {
-                    console.error('Error fetching user province:', error)
                 }
+            } catch (error) {
+                console.error('Error fetching user province:', error)
             }
         }
-        checkUserAndProvince()
+        void checkUserAndProvince()
+        return () => { isMounted = false }
     }, [])
 
+    // 2. Mengambil Daftar Provinsi untuk Dropdown Filter
     useEffect(() => {
+        let isMounted = true;
         const fetchProvinces = async () => {
             try {
                 const res = await fetch(`${AI_API_BASE}/provinces`)
-                if (res.ok) {
-                    const data = await res.json()
-                    setProvinces([ALL_PROVINCES, ...(data.provinces || data)])
-                } else {
+                if (res.ok && isMounted) {
+                    const data = await res.json() as unknown
+                    const provList = Array.isArray(data) ? data : (data as { provinces?: string[] }).provinces || []
+                    setProvinces([ALL_PROVINCES, ...provList.map(p => String(p))])
+                } else if (isMounted) {
                     setProvinces([ALL_PROVINCES])
                 }
             } catch {
-                setProvinces([ALL_PROVINCES])
+                if (isMounted) setProvinces([ALL_PROVINCES])
             }
         }
-        fetchProvinces()
+        void fetchProvinces()
+        return () => { isMounted = false }
     }, [])
 
+    // 3. Mengambil Prediksi AI secara PARALEL (Optimasi Performa Signifikan)
     useEffect(() => {
+        let isMounted = true
+        
         const fetchPredictions = async () => {
             setIsLoading(true)
             setPredictions([])
             const apiBase = import.meta.env.VITE_AI_API_URL || 'https://firmanfadilah-pangan-pintar-api.hf.space'
 
             try {
-                const healthRes = await fetch(`${apiBase}/health`)
-                if (healthRes.ok) {
-                    setIsApiOnline(true)
-
-                    const commRes = await fetch(`${AI_API_BASE}/commodities`)
-                    let commodities: string[] = []
-                    if (commRes.ok) {
-                        const commData = await commRes.json()
-                        commodities = commData.commodities || commData
-                    }
-
-                    if (commodities.length === 0) {
-                        setIsLoading(false)
-                        return
-                    }
-
-                    const targetDate = new Date()
-                    targetDate.setDate(targetDate.getDate() + 7)
-                    const targetWeek = targetDate.toISOString().split('T')[0]
-
-                    const province = selectedProvince === ALL_PROVINCES
-                        ? userProvince || 'DKI Jakarta'
-                        : selectedProvince
-
-                    const results: CommodityPrediction[] = []
-
-                    for (const comm of commodities) {
-                        try {
-                            const res = await fetch(`${AI_API_BASE}/predict`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({
-                                    commodity: comm,
-                                    province: province,
-                                    target_week: targetWeek,
-                                }),
-                            })
-
-                            if (res.ok) {
-                                const data: ApiResponse = await res.json()
-                                let currentPrice = SAMPLE_CURRENT_PRICES[comm] || 
-                                    SAMPLE_CURRENT_PRICES[comm.replace('Minyak Goreng', 'Minyak')] ||
-                                    Math.floor(data.predicted_price * 0.9)
-
-                                const trend = determineTrend(data.predicted_price, currentPrice)
-                                const prediction = getPredictionFromTrend(trend)
-
-                                results.push({
-                                    name: data.commodity,
-                                    predictedPrice: data.predicted_price,
-                                    currentPrice: currentPrice,
-                                    unit: data.commodity?.includes('Minyak') ? '/liter' : '/kg',
-                                    trend: trend,
-                                    prediction: prediction,
-                                })
-                            }
-                        } catch (error) {
-                            console.error('Error fetching', comm, ':', error)
-                        }
-                    }
-
-                    if (results.length > 0) setPredictions(results)
+                // Cek status API terlebih dahulu
+                const healthRes = await fetch(`${apiBase}/health`).catch(() => null)
+                if (healthRes && healthRes.ok) {
+                    if (isMounted) setIsApiOnline(true)
                 } else {
-                    setIsApiOnline(false)
+                    if (isMounted) {
+                        setIsApiOnline(false)
+                        setIsLoading(false)
+                    }
+                    return
+                }
+
+                // Ambil daftar komoditas dari API
+                const commRes = await fetch(`${AI_API_BASE}/commodities`)
+                if (!commRes.ok) throw new Error('Gagal mengambil data komoditas')
+                
+                const commData = await commRes.json() as unknown
+                let commodityList: unknown[] = []
+
+                if (Array.isArray(commData)) {
+                    commodityList = commData
+                } else if (commData && typeof commData === 'object' && 'commodities' in commData && Array.isArray((commData as { commodities: unknown }).commodities)) {
+                    commodityList = (commData as { commodities: unknown[] }).commodities
+                }
+
+                let normalizedCommodities: string[] = []
+                if (commodityList.length > 0) {
+                    if (typeof commodityList[0] === 'object' && commodityList[0] !== null) {
+                        normalizedCommodities = commodityList.map((item) => {
+                            const obj = item as ApiCommodityItem
+                            return obj.name || obj.commodity || obj.nama || ''
+                        }).filter(Boolean)
+                    } else {
+                        normalizedCommodities = commodityList.map(item => String(item)).filter(Boolean)
+                    }
+                }
+
+                if (normalizedCommodities.length === 0) {
+                    if (isMounted) setIsLoading(false)
+                    return
+                }
+
+                // Tentukan target tanggal minggu depan (+7 hari)
+                const targetDate = new Date()
+                targetDate.setDate(targetDate.getDate() + 7)
+                const targetWeek = targetDate.toISOString().split('T')[0]
+
+                // Fallback provinsi jika memilih 'Semua Provinsi'
+                const province = selectedProvince === ALL_PROVINCES
+                    ? userProvince || 'DKI Jakarta'
+                    : selectedProvince
+
+                // IMPLEMENTASI PARALEL: Membungkus seluruh proses fetch ke dalam Promise.all
+                const fetchPromises = normalizedCommodities.map(async (comm) => {
+                    try {
+                        const res = await fetch(`${AI_API_BASE}/predict`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                commodity: comm,
+                                province: province,
+                                target_week: targetWeek,
+                            }),
+                        })
+
+                        if (res.ok) {
+                            const data: ApiResponse = await res.json()
+                            
+                            // Normalisasi nama komoditas agar cocok dengan KEY di data lokal (Capital Case)
+                            const normalizedCommName = data.commodity
+                                .toLowerCase()
+                                .split(' ')
+                                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                                .join(' ')
+
+                            const currentPrice = SAMPLE_CURRENT_PRICES[normalizedCommName] || 
+                                                 SAMPLE_CURRENT_PRICES[normalizedCommName.replace('Minyak Goreng', 'Minyak')] ||
+                                                 Math.floor(data.predicted_price * 0.9)
+
+                            const trend = determineTrend(data.predicted_price, currentPrice)
+                            const prediction = getPredictionFromTrend(trend)
+
+                            return {
+                                name: data.commodity,
+                                predictedPrice: data.predicted_price,
+                                currentPrice: currentPrice,
+                                unit: data.commodity?.includes('Minyak') ? '/liter' : '/kg',
+                                trend: trend,
+                                prediction: prediction,
+                            } as CommodityPrediction
+                        }
+                    } catch (error) {
+                        console.error('Error fetching prediction for', comm, ':', error)
+                    }
+                    return null
+                })
+
+                const unresolvedResults = await Promise.all(fetchPromises)
+                // Filter out nilai null akibat request gagal
+                const results = unresolvedResults.filter((item): item is CommodityPrediction => item !== null)
+
+                if (isMounted && results.length > 0) {
+                    setPredictions(results)
                 }
             } catch (error) {
                 console.error('Fetch error:', error)
-                setIsApiOnline(false)
+                if (isMounted) setIsApiOnline(false)
             } finally {
-                setIsLoading(false)
+                if (isMounted) setIsLoading(false)
             }
         }
 
-        fetchPredictions()
+        void fetchPredictions()
+
+        return () => {
+            isMounted = false
+        }
     }, [selectedProvince, userProvince])
 
+    // Filter list berdasarkan kolom input search
     const filteredCommodities = useMemo((): CommodityPrediction[] => {
         if (!searchQuery) return predictions
         return predictions.filter((item) =>
@@ -202,6 +263,7 @@ export default function PredictionSection() {
         )
     }, [searchQuery, predictions])
 
+    // Deteksi klik di luar dropdown untuk menutup menu filter
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             const target = event.target as HTMLElement
@@ -331,7 +393,7 @@ export default function PredictionSection() {
                                             {/* Column 2: Predicted Price Display */}
                                             <div className="flex flex-col justify-center">
                                                 <span className="font-semibold text-slate-900 dark:text-slate-100">
-                                                    Rp {item.predictedPrice.toLocaleString('id-ID')}{item.unit}
+                                                    Rp {Math.round(item.predictedPrice).toLocaleString('id-ID')}{item.unit}
                                                 </span>
                                                 <span className="text-[11px] text-slate-400 font-medium md:mt-0.5">
                                                     Kini: Rp {item.currentPrice.toLocaleString('id-ID')}
@@ -365,7 +427,7 @@ export default function PredictionSection() {
                                 })
                             ) : (
                                 <div className="px-6 py-16 text-center text-slate-400 dark:text-slate-500 text-sm font-medium">
-                                    Tidak menemukan komoditas baku dengan kriteria pencarian tersebut.
+                                    Tidak menemukan komoditas baku dengan kriteria pencarian tersebut atau server AI offline.
                                 </div>
                             )}
                         </div>

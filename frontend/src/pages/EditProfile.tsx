@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Loader2, Upload, ArrowLeft, User } from 'lucide-react'
 import { getProfile, updateProfile, uploadAvatar } from '@/services/profileApi'
-import type { ProfileData } from '@/services/profileApi'
 
 export default function EditProfile() {
     const navigate = useNavigate()

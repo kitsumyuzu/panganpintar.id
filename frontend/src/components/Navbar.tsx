@@ -105,7 +105,7 @@ export default function Navbar({ onToggleDarkMode, isDark }: NavbarProps) {
             }
 
             try {
-                const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+                const API_URL = import.meta.env.VITE_API_URL || "https://kdn.infinitelearningstudent.id";
                 const res = await fetch(`${API_URL}/api/affiliate/my-store`, {
                     headers: {
                         "Authorization": `Bearer ${token}`,

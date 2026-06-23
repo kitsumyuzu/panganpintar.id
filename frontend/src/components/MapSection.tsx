@@ -138,7 +138,7 @@ export default function MapSection() {
             const token = localStorage.getItem('token')
             if (token) {
                 try {
-                    const res = await fetch('http://localhost:3001/api/auth/me', {
+                    const res = await fetch('https://kdn.infinitelearningstudent.id/api/auth/me', {
                         headers: { 'Authorization': `Bearer ${token}` },
                     })
                     if (res.ok) {

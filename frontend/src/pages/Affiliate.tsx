@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { Search, MapPin, Star, ArrowRight, Filter, Loader2 } from "lucide-react"
 
 const AI_API = 'https://firmanfadilah-pangan-pintar-api.hf.space/api/v1'
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3001"
+const API_URL = import.meta.env.VITE_API_URL || "https://kdn.infinitelearningstudent.id"
 
 interface Store {
     id: number

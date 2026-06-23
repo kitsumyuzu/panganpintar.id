@@ -150,7 +150,7 @@ export default function JoinAffiliate() {
 
         try {
             const token = localStorage.getItem('token')
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001'
+            const API_URL = import.meta.env.VITE_API_URL || 'https://kdn.infinitelearningstudent.id'
 
             const payload = new FormData()
             payload.append('name', formData.name)

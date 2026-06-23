@@ -87,7 +87,7 @@ export default function PredictionSection() {
             if (!token) return
 
             try {
-                const res = await fetch('http://localhost:3001/api/auth/me', {
+                const res = await fetch('https://kdn.infinitelearningstudent.id/api/auth/me', {
                     headers: { 'Authorization': `Bearer ${token}` },
                 })
                 if (res.ok && isMounted) {
